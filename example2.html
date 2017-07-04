@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example vue 2</title>
+
+	<script src="vue.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+<body id="app">
+
+<template v-if="name">
+		<div class="jumbotron" align="center">
+			  <h1>Hey, {{ name}}</h1>
+			  <p> {{ genero == 'm' ? 'Parce bienvenido,' : 'Parcera, bienvenida,'}} por aqui</p>
+			  <p>Aqui le dejo esta sopa de letras: {{ name.split('').reverse().join('') }}
+			  
+		</div>
+</template>
+	<p v-else> Ingrese el nombre: </p>
+	<input type="text" v-model="name" class="form-control">
+
+	<p v-if="name == '' " class="alert alert-danger">
+		El pichu campo de nombre, es obligatorio
+	</p>
+
+	<p v-if="name.length < 2" class="alert alert danger">
+		El nombre esta mal metido
+	</p>
+	<div class="form-group" >
+	  <label for="sel1">Genero:</label>
+	  <select class="form-control" id="sel1" v-model="genero">
+	    <option>m</option>
+	    <option>f</option>
+	   
+	  </select>
+	</div>
+	<hr>
+	<pre>{{ $data | json }}</pre>
+
+
+	<script type="text/javascript">
+		new Vue({
+
+				el:"#app",
+				data:{
+					name:"your name",
+					genero:"m"
+				}
+			
+			});
+		
+
+	</script>
+</body>
+</html>

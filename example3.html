@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <meta content="IE=edge" http-equiv="X-UA-Compatible">
+                <meta content="width=device-width, initial-scale=1" name="viewport">
+                    <title>
+                        example 3 | Curso de VueJS
+                    </title>
+                    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet">
+                        <script src="vue.js">
+                        </script>
+                    </link>
+                </meta>
+            </meta>
+        </meta>
+    </head>
+    <body id="app">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <template v-if="name">
+                    <!-- es como parecido a lo que hace v-show-->
+                    <!-- Si la etiqueta nombre existe o tiene contenido dar la biendenida -->
+                    <!-- toma todo  el template para usar la etiqueta el name -->
+                    <h1>
+                        {{ gender == 'm' ? 'Bienvenido' : 'Bienvenida' }}, {{ name }}
+                        <!--   Usa el condicional para identificar, y darle la bienvenida segun el genero -->
+                    </h1>
+                    <p>
+                        Espero que disfrutes tu visita
+                    </p>
+                    <p>
+                        Tu nombre al revés es: {{ name.split('').reverse().join('') }}
+                        <!--  El nombre al reves -->
+                    </p>
+                </template>
+                <p v-else="">
+                    Por favor escribe tu nombre:
+                </p>
+                <!-- Si no ha ingresado el nombre, este pichu no le da la bienvenida -->
+                <!-- tambien pasamos argumentos al metood, en este caso pasamos el argumento de logout, en false para que se registre normal el pichu usuario.-->
+                <form @submit="signUp(false, $event)">
+                    <input class="form-control" type="text" v-model="name">
+                        <p class="alert alert-danger" v-if="name == ''">
+                            Este campo es obligatorio
+                        </p>
+                        <!-- En esta parte agregamos los radios, el cual tiene 
+                la etiqueta gender, la cual esta directamente ligada al metodo el
+                con el parametro o propiedad del msimo nombre-->
+                        <label>
+                            Hombre:
+                            <input type="radio" v-model="gender" value="m">
+                            </input>
+                        </label>
+                        <label>
+                            Mujer:
+                            <input type="radio" v-model="gender" value="f">
+                            </input>
+                        </label>
+                        <!-- -->
+                        <p>
+                            ¿Cuántos años de experiencia tienes con PHP?
+                        </p>
+                        <p>
+                            Respuesta:
+                            <strong>
+                                {{ years_php }}
+                            </strong>
+                            <!-- estos pichus botones, puede afectar direcamente la varialbe con el evento @click, agregandole o restandole valor al valor. interesante. -->
+                            <button @click="addyears" class="btn" type="button">
+                                +
+                            </button>
+                            <!-- otra solucion mas practica es desabilitar el boton si este pichu es igual a cero, con eso
+                            no seria necesario usar la condicional en el metodo subyears -->
+                            <button 
+                                v-bind:disabled="years_php==0"
+                                @click="subyears"
+                                class="btn" 
+                                type="button">
+                                -
+                            </button>
+                        </p>
+                        <hr>
+                            <!-- esa directiva v-show se utiliza para mostrar este parrafo 
+                si solo cumple, es decir exite la propiedad name.-->
+                            <p v-show="name">
+                                <button class="btn btn-primary" type="submit">
+                                    Regístrate
+                                </button>
+                                <!-- en vez de usar v-on:click se puede usar @click.
+
+                    en este boton le pasamos argumentos al metodo "singUp", este es como para salir de secion y en el metodo ponemos el logout para saber si esta saliendo.
+                    Tambien pasamos por argumentos el evento de js, al metodo.
+                    -->
+                                <button @click="signUp(true, $event)" class="btn btn-primary" type="submit">
+                                    Regístrate y sal del sistema
+                                </button>
+                            </p>
+                        </hr>
+                    </input>
+                </form>
+                <hr>
+                    <pre>{{ $data | json }}</pre>
+                </hr>
+            </div>
+        </div>
+        <script type="text/javascript">
+            new Vue({
+            el: "#app",
+            data: {
+                name: "",
+                gender: 'm',
+                years_php: 0,//nueva variable del obj
+            },
+            // otro objeto donde vamos a guardar los metods
+            methods: {
+                signUp: function (logout, event) {
+                    event.preventDefault();//evitar que se recargue la pichu pagina
+
+                    //podemos usar las propiedades de este pichu, es decir usar name, como propiedad para personalizar el mensaje.
+                    alert(this.name + ', por favor espera mientras te registramos.');
+                    if (logout) {//argumento que pasa el boton desde el formulario si es true, ejecuta esto. 
+                        alert("Saliendo del sistema...");
+                    }
+                },
+                addyears: function(){
+                    this.years_php ++;
+                    
+                },
+                subyears: function(){
+                    if(this.years_php>0){
+                        this.years_php --;
+                    }
+                }
+            }
+        });
+        </script>
+    </body>
+</html>
