@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Example 6 A Notas - ciclos | Curso de VueJS</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="vue.js"></script>
+ 
+</head>
+<body>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Notas</div>
+  <div class="panel-body">
+    	<!-- En esta etiqueta de esta pichu lista vemos que usa la directriz v-for y recorre de singular a plurarl
+    	priimero hace referencia al item y despues al array, en este caso es aun array de obj.-->
+  		<ul v-for="note in notes">
+  			<li>
+  				<!-- Este index, trae el indice-->
+  				{{$index * 2 }}: {{note.text}} escrito por el tio {{note.author}}
+  				
+  				<!-- En esta linea, llaman la nota, q es el item y text que viene siendo la propiedad o el atributo del obj-->
+  			</li>
+  		</ul>
+  		<hr>
+  		<!-- En estea linea llaman al evento click el, metodo create note, que esta en el objeto vue, abajo.
+  		el toma el valor del textarea y afecta directamente al array llamado inicalmente. -->
+  		<form @submit.prevent="createNote" class="form">
+  				
+  				<input type="text" name="author" v-model="new_nota.author" class="form-control">
+  				<textarea v-model="new_nota.text" class="form-control"></textarea>
+  				<!--En esta parte llama el model, para saber que este es el va aplicar directamente el metodo createNote. -->
+
+  				<button type="submit" class="btn btn-primary"> Agregar apunte</button>
+  		</form>
+
+  </div>
+</div>
+
+<!--Aca creamos toda la magia del js, podria ir a su vez en otor
+archivo, algo como un include('scripts.php') -->
+<script>
+		
+	new Vue({
+
+		el: 'body',
+		data:{
+			notes:[
+				{
+				 text:   'v-for es la directiva que utilizmaos para iterar una lista',
+				 author: 'pichu'	
+				},
+				{
+				 text:   '@click se utiliza como un alias de v-on:click',
+				 author: 'otro pichu'	
+				},
+				{
+				 text:   'Con Vue puede crear propios componentes',
+				 author: 'algun tio'	
+				}
+			
+			],
+			new_nota: {text:'',author:''}//este picho esta ligado con el texarea que es el elmento que va guardar la nueva nota que despues se va usar en el metodo create Note
+		},
+		methods:{
+			createNote: function(){
+				this.notes.push(this.new_nota)//cada vez que se usa este metodo, va agregar al array de notes, la new nota.
+				this.notes.push(this.new_nota)//cada vez que se usa este metodo, va agregar al array de notes, la new nota.
+
+				this.new_nota={text:'',author:''}
+				//despues de agregar el array, deje el array con valores po defecto.
+			}
+		}
+
+	});
+
+</script>
+
+</body>
+</html>

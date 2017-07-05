@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Example 5 | Curso de VueJS</title>
+  <title>Example 6 | Curso de VueJS</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -18,10 +18,9 @@
         <div class="col-md-6 col-md-offset-3">
 
             <template v-if="name">
-            <!-- etiqueta de bienvenida del componente, si no defino las propiedas podria dar error teniendo en 
-            cuenta que en el componente tiene propiedades obligatorias como tipo. -->
-            <!-- La manera correcta de poner la etiqueta en dos palabras. mas pinta.-->
-                <welcome-message :name="name" :gender="gender"></welcome-message>
+                <h1>
+                    {{ gender == 'm' ? 'Bienvenido' : 'Bienvenida' }}, {{ name }}
+                </h1>
 
                 <p>Espero que disfrutes tu visita</p>
                 <p>Tu nombre al revés es: {{ name.split('').reverse().join('') }}
@@ -42,12 +41,15 @@
                 <label>
                     Mujer: <input type="radio" v-model="gender" value="f">
                 </label>
-                <!-- Etiquetas para llamar el componente, se podria repetir la veces ques sea 
-                necesario, se usa el moddfiicador .sync pues este VUE, sincroniza en una sola direccion del padre al hijo, en cascada hacia abajo desde el componente raiz y no en sentido contrario.  para que envie datos del hijo  al padre.-->
-                <years-exp :years.sync="years_php" tech="PHP"></years-exp>
-                <years-exp :years.sync="years_js" tech="JS"></years-exp>
 
-                <hr>
+                <!-- Mostrar varias tecnologias, segun un array de un elemento del obj vue, este lo recorre, e imprime con este ciclo, siempre de sigular a plural. -->
+                <template v-for="tech in techs">
+
+                    <years-exp :years.sync="tech.years" :tech="tech.name"></years-exp>
+                    <!-- Importante usar la directiva v-bind  o los dos : y usar el modificador sync-->
+                </template>
+
+              
 
                 <p v-show="name">
                     <button type="submit" class="btn btn-primary">
@@ -59,23 +61,23 @@
                     </button>
                 </p>
             </form>
-            <!-- ejemplo del componente bienvenido mundo. -->
-            <hello-world></hello-world>
 
+             <hr>
+                <form @submit.prevent="createTech" class="form">
+                
+                <textarea v-model="new_tech.name" class="form-control"></textarea>
+                <!--En esta parte llama el model, para saber que este es el va aplicar directamente el metodo createTech. -->
+
+                <button type="submit" class="btn btn-primary"> Agregar Tecnologia</button>
+                </form>
+                <hr>
             <hr>
 
             <pre>{{ $data | json }}</pre>
         </div>
     </div>
 
-    <!-- Se usa script que se usa la template para insertar el html-->
-    <script type="text/template" id="welcome_template">
-        <h1>{{ gender == 'm' ? 'Bienvenido' : 'Bienvenida' }}, {{ name }}</h1>
-    </script>
-
-    <!-- template dinamica, la cual va intevenir el metodo usando estas variables genericas que se llaman en el componente 
-    tambien puedo usar la etiqueta <template>, pero esta aparece unos pocos segundo en el navegador mientras carga el componente, el scrip lo ignora por completo el navegador.-->
-   <script type="text/template" id="years_template">
+    <script type="text/template" id="years_template">
         <p>¿Cuántos años de experiencia tienes con {{ tech }}?</p>
 
         <p>
@@ -94,29 +96,6 @@
 
     <script type="text/javascript">
 
-//ejemplo de componente bienvenido
-//el nombre especificado en el primer parametro, coinicide en la etiqueta.
-        Vue.component('hello-world', {
-            template: '<h2>Hello world</h2>',
-        });
-
-//se aplica  componente de bienvenida a la etiqueta inical, tiene una 
-// cosas diferente que usa las propiedades como obj y le pasa atributos obligatorios, para el compomente. 
-//que son el tipo, si es requerido, y el valor por default en este caso genero m.
-//#welcome_tamplate se relaciona con al etiqueta en la linea 72
-
-        Vue.component('welcome-message', {
-            template: '#welcome_template',
-            props: {
-                gender: {type: String, required: false, default: 'm'},
-                name: {type: String, required: true}
-            }
-        });
-//componente para reutilizar codigo para usar la respuesta de los años de experiencia de los lenguajes
-//se incorporan dos metodos para aumentar la variable
-//y recibe dos propiedades el año y el tipo de lenguaje.
-//#template, es la template que esta en la linea 76
-//el nombre del componente 'years-exp' se usa directamente en la linea 46 - 47
         Vue.component('years-exp', {
             template: '#years_template',
             methods: {
@@ -135,8 +114,13 @@
             data: {
                 name: "",
                 gender: 'm',
-                years_php: 0,
-                years_js: 0,
+                techs: [ //se declara el array, el cual el ciclo en la linea 47, recorre.
+                    {name: 'PHP', years: 0},
+                    {name: 'JS', years: 0},
+                    {name: 'HTML', years: 0},
+                    {name: 'CSS', years: 0},
+                ],
+                new_tech: {name:'',years:0}//este picho esta ligado con el texarea que es el elmento que va guardar la nueva nota que despues se va usar en el metodo create Note
             },
             methods: {
                 signUp: function (logout, event) {
@@ -148,13 +132,18 @@
                         alert("Saliendo del sistema...");
                     }
                 },
+                createTech: function(){
+                this.techs.push(this.new_tech)//cada vez que se usa este metodo, va agregar al array de techs, la new tech.
+
+                this.new_tech={tech:'',years:0}
+                //despues de agregar el array, deje el array con valores po defecto.
+                },
             }
         });
     </script>
     </body>
 </html>
-<!-- crear componente para reutilizar codigo.-->
 
-<!-- **Tip** cuando uso mucho alguns sufijo, quizas sea necesario crear una clase aparte o un componente.-->
+
 
 
