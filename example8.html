@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Example 8 | Curso de VueJS</title>
+  <title>Example 8 filtros | Curso de VueJS</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -19,6 +19,7 @@
 
             <template v-if="name">
                 <h1>
+                <!-- En esta se aplica el filtro pesonalizado a la variable el name en la linea aprox 100-->
                     {{ welcome_message }}, {{ name | ucwords }}
                 </h1>
 
@@ -66,13 +67,37 @@
                     </button>
                 </p>
             </form>
-
+            <!-- Se aplica el filtro, programado en la linea aprox 106, el cual esta personalizado y solo muestras las tencologias que tenga años de experiecias -->
             <h3>Tienes experiencia en: </h3>
             <ul>
-                <li v-for="tech in techs | orderBy 'years' -1 | years">{{ tech.name }}</li>
+                <li v-for="tech in techs | orderBy 'years' -1 | years">{{ tech.name }}</li><!-- Muestra los nombre de la tecnoligas ordenas por el año y aplica el filtro con el parametro "|"  el cual evalua con el filtro aplicado si aplica o no, y lo ordena por años.-->
+
             </ul>
             <hr>
 
+            <h3>Experto en backend: </h3>
+            <ul>
+                <li v-for="tech in techs | orderBy 'years' -1 | backend">{{ tech.name }}</li>
+                <!-- Solo aplica para las tecnologias en backend-->
+            </ul>
+            <hr>
+
+            <h3>Experto en frontend </h3>
+            <ul>
+                <li v-for="tech in techs | orderBy 'years' -1 | frontend">{{ tech.name }}</li>
+                <!-- Solo aplica para las tecnologias en backend false o frontend-->
+                
+            </ul>
+            <hr>
+
+
+             <h3>No tiene experiencia en: </h3>
+            <ul>
+                
+                 <li v-for="tech in techs | orderBy 'years' -1 | none">{{ tech.name }}</li>
+                <!-- Solo aplica para las tecnologias q no  tiene años-->
+            </ul>
+            <hr>
             <pre>{{ $data | json }}</pre>
         </div>
     </div>
@@ -96,17 +121,38 @@
 
     <script type="text/javascript">
 
-        Vue.filter('ucwords', function (value) {
+      Vue.filter('backend', function (techs) {
+            return techs.filter(function (tech) {
+                return tech.backend == true & tech.years>5;
+            });
+        });
+
+      Vue.filter('none', function (techs) {
+            return techs.filter(function (tech) {
+                return  tech.years<1;
+            });
+        });
+
+      Vue.filter('frontend', function (techs) {
+            return techs.filter(function (tech) {
+                return tech.backend == false & tech.years>5;
+            });
+        });
+
+
+        Vue.filter('ucwords', function (value) {//en este filtro se usa la palabra vue.filter  el cual pone en mayuscula la primera letra volviendo la cadena en array.
             return value.split(' ').map(function (word) {
                 return word.charAt(0).toUpperCase() + word.slice(1);
             }).join(' ');
         });
 
-        Vue.filter('years', function (techs) {
+        Vue.filter('years', function (techs) {//filtro para solo ir mostrando las tecnologias solo las que tenga años de experiencias
             return techs.filter(function (tech) {
                 return tech.years > 0;
             });
         });
+
+       
 
         Vue.component('years-exp', {
             template: '#years_template',
@@ -129,11 +175,11 @@
                 gender: 'm',
                 spanish: true,
                 techs: [
-                    {name: 'PHP', years: 0},
-                    {name: 'JS', years: 0},
-                    {name: 'HTML', years: 0},
-                    {name: 'CSS', years: 0},
-                    {name: 'MySQL', years: 0},
+                    {name: 'PHP', years: 0,backend:  true},
+                    {name: 'JS', years: 0,backend:   false},
+                    {name: 'HTML', years: 0,backend: false},
+                    {name: 'CSS', years: 0,backend:  false},
+                    {name: 'MySQL', years: 0,backend:true},
                 ]
             },
             computed: {
